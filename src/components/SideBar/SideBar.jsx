@@ -16,7 +16,6 @@ import { MdLogout } from "react-icons/md";
 import Image from "next/image";
 import { MenuLink } from "./MenuLink/MenuLink";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwither";
-import { space } from "postcss/lib/list";
 
 const menuItems = [
   {

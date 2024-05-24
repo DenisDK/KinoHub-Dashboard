@@ -7,7 +7,9 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { CiBookmarkPlus } from "react-icons/ci";
 import { IoEyeSharp } from "react-icons/io5";
 import { MdSupervisedUserCircle } from "react-icons/md";
+import DataTable from "@/components/DataTable/DataTable";
 
+const isAdmin = true;
 export default function Home() {
   return (
     <div className="flex gap-5 mt-5">
@@ -34,10 +36,8 @@ export default function Home() {
             icon={<IoMdCloseCircle size={24} />}
           />
         </div>
-        {/* <Transactions /> */}
-        {/* <Chart />
+        {isAdmin ? <DataTable /> : ""}
         <Chart />
-        <Chart /> */}
       </div>
       <div className="flex">
         <RightBar />
