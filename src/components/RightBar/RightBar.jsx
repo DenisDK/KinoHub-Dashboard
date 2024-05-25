@@ -33,7 +33,7 @@ const RightBar = () => {
           </p>
           <button className="bg-[#ccc] dark:bg-[#272727] hover:bg-[#bbb] dark:hover:bg-[#353535] duration-300 py-2 px-4 rounded-md flex items-center">
             <MdPlayCircleFilled />
-            <span className="ml-2">Watch</span>
+            <span className="ml-2">Читати</span>
           </button>
         </div>
       </div>
@@ -41,7 +41,7 @@ const RightBar = () => {
         <div className="">
           <span className="font-bold block mb-2">🚀 Незабаром</span>
           <h3 className="text-xl font-semibold mb-1">
-            Нове обновлення доступні нові можливойті! Читати нище!
+            Нове оновлення доступні нові можливойті! Читати нище!
           </h3>
           <span className="text-sm text-gray-700 dark:text-gray-300 mb-2">
             Поліпщення
@@ -52,7 +52,7 @@ const RightBar = () => {
           </p>
           <button className="bg-[#ccc] dark:bg-[#272727] hover:bg-[#bbb] dark:hover:bg-[#353535] duration-300 py-2 px-4 rounded-md flex items-center">
             <MdReadMore />
-            <span className="ml-2">Learn</span>
+            <span className="ml-2">Детельніше</span>
           </button>
         </div>
       </div>
@@ -68,9 +68,7 @@ const RightBar = () => {
           <p className="text-sm mb-2">Супер додаток для кінолюбів😎👍!</p>
           <button className="bg-[#ccc] dark:bg-[#272727] hover:bg-[#bbb] dark:hover:bg-[#353535] duration-300 py-2 px-4 rounded-md flex items-center">
             <FaCloudDownloadAlt />
-            <Link href="/Help">
-              <span className="ml-2">Завантажити</span>
-            </Link>
+            <span className="ml-2">Завантажити</span>
           </button>
         </div>
       </div>
