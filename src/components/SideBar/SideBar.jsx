@@ -1,4 +1,7 @@
 import React from "react";
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwither";
+import { MenuLink } from "./MenuLink/MenuLink";
+import Image from "next/image";
 
 // Icons
 
@@ -12,10 +15,8 @@ import { MdPeople } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
 import { MdLogout } from "react-icons/md";
+import { MdWorkspacePremium } from "react-icons/md";
 // import { MenuLink } from "./menuLink/MenuLink";
-import Image from "next/image";
-import { MenuLink } from "./MenuLink/MenuLink";
-import ThemeSwitcher from "../ThemeSwitcher/ThemeSwither";
 
 const menuItems = [
   {
@@ -81,6 +82,7 @@ const menuItems = [
 ];
 
 const isAdmin = true;
+const isPremium = true;
 const SideBar = () => {
   return (
     <div className="sticky top-10">
@@ -93,7 +95,16 @@ const SideBar = () => {
           height={50}
         />
         <div className="flex flex-col">
-          <span className="font-medium">User name</span>
+          <span className="font-medium flex items-center gap-2">
+            User name
+            {isPremium ? (
+              <span className="text-[#ff5200]">
+                <MdWorkspacePremium />
+              </span>
+            ) : (
+              ""
+            )}
+          </span>
           <span className="text-xs dark:text-gray-300">
             {isAdmin ? (
               <span className="font-bold text-green-700 dark:text-green-500">
