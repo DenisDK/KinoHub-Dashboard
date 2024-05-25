@@ -14,9 +14,9 @@ import { MdAnalytics } from "react-icons/md";
 import { MdPeople } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
-import { MdLogout } from "react-icons/md";
 import { MdWorkspacePremium } from "react-icons/md";
-// import { MenuLink } from "./menuLink/MenuLink";
+import SingIn from "./MenuAuth/SingIn";
+import SignOut from "./MenuAuth/SignOut";
 
 const menuItems = [
   {
@@ -83,6 +83,7 @@ const menuItems = [
 
 const isAdmin = true;
 const isPremium = true;
+const isUser = true;
 const SideBar = () => {
   return (
     <div className="sticky top-10">
@@ -99,7 +100,7 @@ const SideBar = () => {
             User name
             {isPremium ? (
               <span className="text-[#ff5200]">
-                <MdWorkspacePremium />
+                <MdWorkspacePremium size={20} />
               </span>
             ) : (
               ""
@@ -128,10 +129,7 @@ const SideBar = () => {
           </li>
         ))}
       </ul>
-      <button className="w-full p-4 my-1 flex items-center gap-2 cursor-pointer rounded-xl bg-none border-none duration-300 font-bold hover:bg-[#e0e0e0] hover:dark:bg-[#202020]">
-        <MdLogout />
-        Logout
-      </button>
+      {isUser ? <SingIn /> : <SignOut />}
       <div className="flex justify-center mt-20">
         <ThemeSwitcher />
       </div>
