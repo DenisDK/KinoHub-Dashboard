@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { MdReadMore } from "react-icons/md";
 import { FaCloudDownloadAlt } from "react-icons/fa";
+import Link from "next/link";
 
 const RightBar = () => {
   return (
@@ -67,7 +68,9 @@ const RightBar = () => {
           <p className="text-sm mb-2">Супер додаток для кінолюбів😎👍!</p>
           <button className="bg-[#ccc] dark:bg-[#272727] hover:bg-[#bbb] dark:hover:bg-[#353535] duration-300 py-2 px-4 rounded-md flex items-center">
             <FaCloudDownloadAlt />
-            <span className="ml-2">Завантажити</span>
+            <Link href="/Help">
+              <span className="ml-2">Завантажити</span>
+            </Link>
           </button>
         </div>
       </div>

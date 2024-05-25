@@ -73,7 +73,7 @@ const menuItems = [
       },
       {
         title: "Help",
-        path: "/help",
+        path: "/Help",
         icon: <MdHelpCenter />,
       },
     ],
