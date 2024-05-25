@@ -1,7 +1,16 @@
+"use client";
+
 import React from "react";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwither";
 import { MenuLink } from "./MenuLink/MenuLink";
 import Image from "next/image";
+import SingIn from "./MenuAuth/SingIn";
+import SignOut from "./MenuAuth/SignOut";
+
+import { useEffect, useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 // Icons
 
@@ -15,8 +24,6 @@ import { MdPeople } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
 import { MdWorkspacePremium } from "react-icons/md";
-import SingIn from "./MenuAuth/SingIn";
-import SignOut from "./MenuAuth/SignOut";
 
 const menuItems = [
   {
@@ -81,33 +88,61 @@ const menuItems = [
   },
 ];
 
-const isAdmin = true;
-const isPremium = true;
-const isUser = true;
+// const isAdmin = true;
+// const isPremium = true;
+// const isUser = true;
 const SideBar = () => {
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const userDocRef = doc(db, "Users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        }
+      } else {
+        setUser(null);
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (!user) {
+    return (
+      <div className="flex justify-center mt-20">
+        <SingIn />
+        <ThemeSwitcher />
+      </div>
+    );
+  }
+
   return (
     <div className="sticky top-10">
       <div className="flex items-center gap-5 mb-5">
         <Image
           className="rounded-full object-cover"
-          src="/noavatar.png"
+          src={user.photoURL || "/noavatar.png"}
           alt="User logo"
           width={50}
           height={50}
         />
         <div className="flex flex-col">
           <span className="font-medium flex items-center gap-2">
-            User name
-            {isPremium ? (
+            {user.displayName || "User name"}
+            {userData?.isPremium && (
               <span className="text-[#ff5200]">
                 <MdWorkspacePremium size={20} />
               </span>
-            ) : (
-              ""
             )}
           </span>
           <span className="text-xs dark:text-gray-300">
-            {isAdmin ? (
+            {userData?.isAdmin ? (
               <span className="font-bold text-green-700 dark:text-green-500">
                 Admin
               </span>
@@ -129,7 +164,7 @@ const SideBar = () => {
           </li>
         ))}
       </ul>
-      {isUser ? <SingIn /> : <SignOut />}
+      <SignOut />
       <div className="flex justify-center mt-20">
         <ThemeSwitcher />
       </div>
