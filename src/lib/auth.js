@@ -14,7 +14,6 @@ export const signInWithGoogle = async () => {
 
     if (!userDoc.exists()) {
       await setDoc(userDocRef, {
-        email: user.email,
         nickname: user.displayName,
         profile_image: user.photoURL,
         friends: [],

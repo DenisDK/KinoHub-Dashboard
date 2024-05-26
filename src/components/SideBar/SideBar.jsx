@@ -115,16 +115,35 @@ const SideBar = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center mt-20">
+      <div className="sticky top-10">
+        <div className="flex items-center gap-5 mb-5">
+          <Image
+            className="rounded-full object-cover"
+            src="/noavatar.png"
+            alt="User logo"
+            width={50}
+            height={50}
+          />
+          <div className="flex flex-col">
+            <span className="font-medium flex items-center gap-2">
+              User name
+            </span>
+            <span className="text-xs dark:text-gray-300">
+              <span className="font-bold">User</span>
+            </span>
+          </div>
+        </div>
         <SingIn />
-        <ThemeSwitcher />
+        <div className="flex justify-center mt-20">
+          <ThemeSwitcher />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="sticky top-10">
-      <div className="flex items-center gap-5 mb-5">
+      <div className="flex items-center gap-2 mb-5">
         <Image
           className="rounded-full object-cover"
           src={user.photoURL || "/noavatar.png"}
