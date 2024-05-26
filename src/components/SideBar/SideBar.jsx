@@ -43,7 +43,7 @@ const menuItems = [
       },
       {
         title: "Преміум",
-        path: "/transactions",
+        path: "/premium",
         icon: <MdAttachMoney />,
       },
     ],
@@ -76,7 +76,7 @@ const SideBar = () => {
         const userDocRef = doc(db, "Users", currentUser.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
-          setUserData(userDoc.data());
+          setUserData(userDoc.data()); // Обновление состояния данных пользователя
         }
       } else {
         setUser(null);
