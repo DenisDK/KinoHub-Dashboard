@@ -4,7 +4,7 @@ import React from "react";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwither";
 import { MenuLink } from "./MenuLink/MenuLink";
 import Image from "next/image";
-import SingIn from "./MenuAuth/SingIn";
+import SignIn from "./MenuAuth/SignIn";
 import SignOut from "./MenuAuth/SignOut";
 
 import { useEffect, useState } from "react";
@@ -18,19 +18,16 @@ import { MdDashboard } from "react-icons/md";
 import { MdSupervisedUserCircle } from "react-icons/md";
 import { MdShoppingBag } from "react-icons/md";
 import { MdAttachMoney } from "react-icons/md";
-import { MdWork } from "react-icons/md";
-import { MdAnalytics } from "react-icons/md";
-import { MdPeople } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
 import { MdWorkspacePremium } from "react-icons/md";
 
 const menuItems = [
   {
-    title: "Pages",
+    title: "Сторінки",
     list: [
       {
-        title: "Dashboard",
+        title: "Головна",
         path: "/",
         icon: <MdDashboard />,
       },
@@ -40,57 +37,34 @@ const menuItems = [
         icon: <MdSupervisedUserCircle />,
       },
       {
-        title: "Products",
+        title: "Додаток",
         path: "/products",
         icon: <MdShoppingBag />,
       },
       {
-        title: "Transactions",
+        title: "Преміум",
         path: "/transactions",
         icon: <MdAttachMoney />,
       },
     ],
   },
   {
-    title: "Analytics",
+    title: "Користувач",
     list: [
       {
-        title: "Revenue",
-        path: "/revenue",
-        icon: <MdWork />,
-      },
-      {
-        title: "Reports",
-        path: "/reports",
-        icon: <MdAnalytics />,
-      },
-      {
-        title: "Teams",
-        path: "/teams",
-        icon: <MdPeople />,
-      },
-    ],
-  },
-  {
-    title: "User",
-    list: [
-      {
-        title: "Settings",
+        title: "Налаштування",
         path: "/settings",
         icon: <MdOutlineSettings />,
       },
       {
-        title: "Help",
-        path: "/Help",
+        title: "Допомога",
+        path: "/help",
         icon: <MdHelpCenter />,
       },
     ],
   },
 ];
 
-// const isAdmin = true;
-// const isPremium = true;
-// const isUser = true;
 const SideBar = () => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -115,8 +89,8 @@ const SideBar = () => {
 
   if (!user) {
     return (
-      <div className="sticky top-10">
-        <div className="flex items-center gap-5 mb-5">
+      <div className="sticky top-10 flex flex-col h-[calc(100vh-4rem)]">
+        <div className="flex items-center gap-2 mb-5">
           <Image
             className="rounded-full object-cover"
             src="/noavatar.png"
@@ -133,8 +107,10 @@ const SideBar = () => {
             </span>
           </div>
         </div>
-        <SingIn />
-        <div className="flex justify-center mt-20">
+        <div className="flex-grow">
+          <SignIn />
+        </div>
+        <div className="mt-auto flex justify-center">
           <ThemeSwitcher />
         </div>
       </div>
@@ -142,7 +118,7 @@ const SideBar = () => {
   }
 
   return (
-    <div className="sticky top-10">
+    <div className="sticky top-10 flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-5">
         <Image
           className="rounded-full object-cover"
@@ -171,7 +147,7 @@ const SideBar = () => {
           </span>
         </div>
       </div>
-      <ul className="list-none">
+      <ul className="list-none flex-grow">
         {menuItems.map((cat) => (
           <li key={cat.title}>
             <span className="block text-xs font-bold text-gray-500 my-2">
@@ -182,9 +158,9 @@ const SideBar = () => {
             ))}
           </li>
         ))}
+        <SignOut />
       </ul>
-      <SignOut />
-      <div className="flex justify-center mt-20">
+      <div className="mt-auto flex justify-center">
         <ThemeSwitcher />
       </div>
     </div>
