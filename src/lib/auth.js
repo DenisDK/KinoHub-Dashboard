@@ -1,6 +1,6 @@
 // auth.js
 import { signInWithPopup, signOut } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 import { auth, db, provider } from "./firebase";
 
 export const signInWithGoogle = async () => {
@@ -19,9 +19,17 @@ export const signInWithGoogle = async () => {
         friends: [],
         isPremium: false,
         isAdmin: false,
-        AbandonedMovies: [],
-        PlannedMovies: [],
-        WatchedMovies: [],
+      });
+
+      // Initialize subcollections for AbandonedMovies, PlannedMovies, and WatchedMovies
+      const subcollections = [
+        "AbandonedMovies",
+        "PlannedMovies",
+        "WatchedMovies",
+      ];
+      subcollections.forEach(async (subcollection) => {
+        const subcollectionRef = collection(userDocRef, subcollection);
+        await setDoc(doc(subcollectionRef), {});
       });
     }
   } catch (error) {
