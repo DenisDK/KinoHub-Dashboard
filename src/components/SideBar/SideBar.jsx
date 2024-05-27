@@ -20,6 +20,7 @@ import { MdAttachMoney } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
 import { MdWorkspacePremium } from "react-icons/md";
+import { BsFillInfoCircleFill } from "react-icons/bs";
 
 const menuItems = [
   {
@@ -39,6 +40,11 @@ const menuItems = [
         title: "Преміум",
         path: "/premium",
         icon: <MdAttachMoney />,
+      },
+      {
+        title: "Оновлення",
+        path: "/patchNote",
+        icon: <BsFillInfoCircleFill />,
       },
     ],
   },
