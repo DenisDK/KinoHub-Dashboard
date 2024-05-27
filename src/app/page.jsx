@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/Card/Card";
-import Chart from "@/components/Chart/Chart";
+// import Chart from "@/components/Chart/Chart";
 import RightBar from "@/components/RightBar/RightBar";
 import DataTable from "@/components/DataTable/DataTable";
 
