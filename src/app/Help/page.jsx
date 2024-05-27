@@ -47,7 +47,30 @@ const HelpPage = () => {
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, inventore."
           }
         />
-
+        <HelpCard
+          title={"Helpcard 222"}
+          text={
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, inventore."
+          }
+        />
+        <HelpCard
+          title={"Helpcard 222"}
+          text={
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, inventore."
+          }
+        />
+        <HelpCard
+          title={"Helpcard 222"}
+          text={
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, inventore."
+          }
+        />
+        <HelpCard
+          title={"Helpcard 222"}
+          text={
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, inventore."
+          }
+        />
         <HelpCard
           title={"Helpcard 222"}
           text={

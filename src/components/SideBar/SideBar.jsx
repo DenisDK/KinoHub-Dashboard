@@ -15,7 +15,6 @@ import { doc, getDoc } from "firebase/firestore";
 // Icons
 
 import { MdDashboard } from "react-icons/md";
-import { MdSupervisedUserCircle } from "react-icons/md";
 import { MdShoppingBag } from "react-icons/md";
 import { MdAttachMoney } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
@@ -32,13 +31,8 @@ const menuItems = [
         icon: <MdDashboard />,
       },
       {
-        title: "Users",
-        path: "/users",
-        icon: <MdSupervisedUserCircle />,
-      },
-      {
         title: "Додаток",
-        path: "/products",
+        path: "/application",
         icon: <MdShoppingBag />,
       },
       {
