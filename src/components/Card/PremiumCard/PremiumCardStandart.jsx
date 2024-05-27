@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 
 const PremiumCardStandart = () => {
   return (
-    <div className="bg-[#ccc] dark:bg-[#272727] mt-5 p-5 rounded-lg flex">
+    <div className="bg-[#ccc] dark:bg-[#272727] p-5 rounded-lg flex">
       <div className="bg-[#e0e0e0] dark:bg-[#353535] p-5 rounded-lg">
         <div className="font-bold text-lg relative">
           Стандартна підписка

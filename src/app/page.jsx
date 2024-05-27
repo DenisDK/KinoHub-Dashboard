@@ -16,7 +16,6 @@ import { CiBookmarkPlus } from "react-icons/ci";
 import { IoEyeSharp } from "react-icons/io5";
 import { MdSupervisedUserCircle } from "react-icons/md";
 
-// const isAdmin = true;
 export default function Home() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
