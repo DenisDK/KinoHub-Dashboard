@@ -47,8 +47,8 @@ const GooglePayButtonComponent = () => {
         transactionInfo: {
           totalPriceStatus: "FINAL",
           totalPriceLabel: "Total",
-          totalPrice: "1",
-          currencyCode: "UAN",
+          totalPrice: "200",
+          currencyCode: "UAH",
           countryCode: "UA",
         },
         shippingAddressRequired: true,
@@ -58,7 +58,13 @@ const GooglePayButtonComponent = () => {
         console.log("load payment data", paymentRequest);
         const userId = auth.currentUser?.uid;
         if (userId) {
-          updateIsPremium(userId);
+          updateIsPremium(userId)
+            .then(() => {
+              window.location.reload();
+            })
+            .catch((error) => {
+              console.error("Failed to update user status: ", error);
+            });
         } else {
           console.error("No user is currently signed in.");
         }
@@ -72,7 +78,7 @@ const GooglePayButtonComponent = () => {
         return {};
       }}
       existingPaymentMethodRequired="false"
-      buttonColor="black"
+      buttonColor="white"
       buttonType="Buy"
     />
   );

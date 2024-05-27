@@ -27,10 +27,6 @@ body {
     /* height: 10000px; */
 }
 
-.custom-google-pay-button {
-   @apply bg-blue-500 text-black hover:bg-blue-700;
- }
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
