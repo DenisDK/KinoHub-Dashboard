@@ -110,6 +110,16 @@ const SettingsPage = () => {
   const handleFileChange = (event) => {
     if (event.target.files[0]) {
       const file = event.target.files[0];
+      const fileType = file.type;
+
+      // Check if the file is a GIF
+      if (fileType === "image/gif" && !userData?.isPremium) {
+        alert(
+          "Завантаження GIF-зображень доступне лише при наявності преміум-статусу!"
+        );
+        return;
+      }
+
       setProfileImage(file);
       setPreviewImageURL(URL.createObjectURL(file));
     }
