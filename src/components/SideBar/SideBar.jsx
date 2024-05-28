@@ -10,7 +10,7 @@ import SignOut from "./MenuAuth/SignOut";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 
 // Icons
 
@@ -70,21 +70,25 @@ const SideBar = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         const userDocRef = doc(db, "Users", currentUser.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          setUserData(userDoc.data()); // Обновление состояния данных пользователя
-        }
+        // Listen for real-time updates to user data
+        const unsubscribeDoc = onSnapshot(userDocRef, (doc) => {
+          if (doc.exists()) {
+            setUserData(doc.data());
+          }
+        });
+
+        return () => unsubscribeDoc();
       } else {
         setUser(null);
         setUserData(null);
       }
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
 
   if (!user) {
@@ -118,18 +122,18 @@ const SideBar = () => {
   }
 
   return (
-    <div className="sticky top-10 flex flex-col h-[calc(100vh-4rem)]">
+    <div className="sticky top-10 flex flex-col max-w-[220px] h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-5">
         <Image
           className="rounded-full object-cover"
-          src={user.photoURL || "/noavatar.png"}
+          src={userData?.profile_image || "/noavatar.png"}
           alt="User logo"
           width={50}
           height={50}
         />
         <div className="flex flex-col">
           <span className="font-medium flex items-center gap-2">
-            {user.displayName || "User name"}
+            {userData?.nickname || "User name"}
             {userData?.isPremium && (
               <span className="text-[#ff5200]">
                 <MdWorkspacePremium size={20} />

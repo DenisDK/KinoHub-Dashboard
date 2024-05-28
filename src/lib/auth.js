@@ -21,7 +21,6 @@ export const signInWithGoogle = async () => {
         isAdmin: false,
       });
 
-      // Initialize subcollections for AbandonedMovies, PlannedMovies, and WatchedMovies
       const subcollections = [
         "AbandonedMovies",
         "PlannedMovies",

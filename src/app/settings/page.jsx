@@ -5,6 +5,17 @@ import RightBar from "@/components/RightBar/RightBar";
 import { Card } from "@/components/Card/Card";
 import Link from "next/link";
 import Image from "next/image";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db, storage } from "@/lib/firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 // Icons
 import { CiBookmarkPlus } from "react-icons/ci";
@@ -12,15 +23,6 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { IoEyeSharp } from "react-icons/io5";
 import { MdSupervisedUserCircle } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
 
 const SettingsPage = () => {
   const [user, setUser] = useState(null);
@@ -30,13 +32,17 @@ const SettingsPage = () => {
   const [watchedMovies, setToWatchedMovies] = useState(0);
   const [totalMovies, setTotalMovies] = useState(0);
 
+  const [nickname, setNickname] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImageURL, setProfileImageURL] = useState("/noavatar.png");
+  const [previewImageURL, setPreviewImageURL] = useState("/noavatar.png");
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         const userDocRef = doc(db, "Users", currentUser.uid);
 
-        // Функция для обновления данных о фильмах
         const updateMoviesData = async () => {
           const abandonedSnapshot = await getDocs(
             collection(userDocRef, "AbandonedMovies")
@@ -57,10 +63,9 @@ const SettingsPage = () => {
           setToWatchedMovies(watchedCount);
           setTotalMovies(total);
         };
-        // Обновляем данные о фильмах
+
         await updateMoviesData();
 
-        // Подписываемся на изменения коллекций
         const abandonedUnsubscribe = onSnapshot(
           collection(userDocRef, "AbandonedMovies"),
           () => {
@@ -82,7 +87,11 @@ const SettingsPage = () => {
 
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
-          setUserData(userDoc.data());
+          const userData = userDoc.data();
+          setUserData(userData);
+          setNickname(userData.nickname);
+          setProfileImageURL(userData.profile_image || "/noavatar.png");
+          setPreviewImageURL(userData.profile_image || "/noavatar.png");
         }
         return () => {
           abandonedUnsubscribe();
@@ -97,6 +106,37 @@ const SettingsPage = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const handleFileChange = (event) => {
+    if (event.target.files[0]) {
+      const file = event.target.files[0];
+      setProfileImage(file);
+      setPreviewImageURL(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSaveChanges = async (event) => {
+    event.preventDefault();
+    if (user) {
+      const userDocRef = doc(db, "Users", user.uid);
+      let updatedData = { nickname };
+
+      if (profileImage) {
+        const profileImageRef = ref(storage, `profileImages/${user.uid}`);
+        await uploadBytes(profileImageRef, profileImage);
+        const photoURL = await getDownloadURL(profileImageRef);
+        updatedData.profile_image = photoURL;
+        setProfileImageURL(photoURL);
+        setPreviewImageURL(photoURL);
+      }
+
+      await updateDoc(userDocRef, updatedData);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        setUserData(userDoc.data());
+      }
+    }
+  };
 
   return (
     <div className="flex gap-5 mt-5">
@@ -124,10 +164,10 @@ const SettingsPage = () => {
           />
         </div>
         <div className="bg-[#ccc] dark:bg-[#272727] mt-5 p-5 rounded-lg">
-          <form>
+          <form onSubmit={handleSaveChanges}>
             <div className="mb-4">
               <Image
-                src="/noavatar.png"
+                src={previewImageURL}
                 alt="Profile"
                 className="my-2 rounded-lg"
                 width={237}
@@ -144,6 +184,7 @@ const SettingsPage = () => {
                 id="profileImage"
                 accept="image/*"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+                onChange={handleFileChange}
               />
             </div>
             <div className="mb-4">
@@ -156,6 +197,8 @@ const SettingsPage = () => {
               <input
                 type="text"
                 id="username"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
