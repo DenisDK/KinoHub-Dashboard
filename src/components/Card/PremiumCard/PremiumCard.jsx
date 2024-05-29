@@ -10,7 +10,7 @@ const PremiumCard = () => {
     <div className="bg-[#ccc] dark:bg-[#272727] p-5 rounded-lg flex">
       <div className="bg-[#e0e0e0] dark:bg-[#353535] p-5 rounded-lg">
         <div className="font-bold text-lg relative">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 h-[45px]">
             Преміум підписка
             <div className="rounded-full overflow-hidden">
               <Image
@@ -27,23 +27,23 @@ const PremiumCard = () => {
         <div className="mt-7">
           <div className="mt-5 flex items-center gap-3">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" />{" "}
-            Lorem ipsum dolor sit amet.
+            Коментування фільмів
           </div>
           <div className="mt-5 flex items-center gap-3">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" />{" "}
-            Lorem ipsum dolor sit amet.
+            Оцінювання фільмів
           </div>
           <div className="mt-5 flex items-center gap-3">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" />{" "}
-            Lorem ipsum dolor sit amet.
+            Анімовані аватарки
           </div>
           <div className="mt-5 flex items-center gap-3">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" />{" "}
-            Lorem ipsum dolor sit amet.
+            Розширений список друзів
           </div>
           <div className="mt-5 flex items-center gap-3">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" />{" "}
-            Lorem ipsum dolor sit amet.
+            Унікальний значок
           </div>
         </div>
         <GooglePayButtonComponent />
