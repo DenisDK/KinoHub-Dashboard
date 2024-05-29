@@ -124,13 +124,14 @@ const SideBar = () => {
   return (
     <div className="sticky top-10 flex flex-col max-w-[220px] h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-5">
-        <Image
-          className="rounded-full object-cover"
-          src={userData?.profile_image || "/noavatar.png"}
-          alt="User logo"
-          width={50}
-          height={50}
-        />
+        <div className="relative" style={{ width: '45px', height: '45px' }}>
+          <Image
+            className="rounded-full object-cover inline-block"
+            src={userData?.profile_image || "/noavatar.png"}
+            alt="User logo"
+            fill
+          />
+        </div>
         <div className="flex flex-col">
           <span className="font-medium flex items-center gap-2">
             {userData?.nickname || "User name"}
