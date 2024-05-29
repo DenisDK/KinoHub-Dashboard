@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "next-themes";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
     field: "profile_image",
-    headerName: "Avatar",
+    headerName: "Аватар",
     width: 65,
     renderCell: (params) => {
       if (!params.value) {
@@ -29,26 +37,90 @@ const columns = [
   },
   {
     field: "nickname",
-    headerName: "Name",
+    headerName: "Нік",
     width: 130,
   },
   {
     field: "isPremium",
-    headerName: "Premium",
-    width: 130,
+    headerName: "Преміум",
+    width: 100,
     renderCell: (params) => <span>{params.value ? "Yes" : "No"}</span>,
   },
   {
     field: "isAdmin",
-    headerName: "Admin",
-    width: 130,
+    headerName: "Адмін",
+    width: 100,
     renderCell: (params) => <span>{params.value ? "Yes" : "No"}</span>,
+  },
+  {
+    field: "togglePremium",
+    headerName: "Преміус стату",
+    width: 150,
+    renderCell: (params) => {
+      const handleTogglePremium = async () => {
+        const userRef = doc(db, "Users", params.row.id);
+        await updateDoc(userRef, {
+          isPremium: !params.row.isPremium,
+        });
+      };
+
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleTogglePremium}
+        >
+          {params.row.isPremium ? "Забрати" : "Видати"}
+        </Button>
+      );
+    },
+  },
+  {
+    field: "toggleAdmin",
+    headerName: "Адмін статус",
+    width: 150,
+    renderCell: (params) => {
+      const handleToggleAdmin = async () => {
+        const userRef = doc(db, "Users", params.row.id);
+        await updateDoc(userRef, {
+          isAdmin: !params.row.isAdmin,
+        });
+      };
+
+      return (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleToggleAdmin}
+        >
+          {params.row.isAdmin ? "Забрати" : "Видати"}
+        </Button>
+      );
+    },
+  },
+  {
+    field: "deleteUser",
+    headerName: "Видалити кристувача",
+    width: 155,
+    renderCell: (params) => {
+      const handleDeleteUser = async () => {
+        const userRef = doc(db, "Users", params.row.id);
+        await deleteDoc(userRef);
+      };
+
+      return (
+        <Button variant="contained" color="error" onClick={handleDeleteUser}>
+          Видалити
+        </Button>
+      );
+    },
   },
 ];
 
 const DataTable = () => {
   const { theme } = useTheme();
   const [rows, setRows] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
@@ -62,8 +134,22 @@ const DataTable = () => {
     return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
+  // Filter rows based on search query
+  const filteredRows = rows.filter((row) =>
+    row.nickname.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full h-auto bg-[#cccccc] dark:bg-[#272727] mt-5 duration-300 rounded-lg p-5">
+      {/* Search input */}
+      {/* <TextField
+        label="Пошук за ніком"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      /> */}
       <DataGrid
         sx={() => ({
           border: 1,
@@ -96,7 +182,7 @@ const DataTable = () => {
             color: theme === "dark" ? "#4f4f4f" : "#a1a1a1",
           },
         })}
-        rows={rows}
+        rows={filteredRows} // Use filtered rows instead of all rows
         columns={columns}
         initialState={{
           pagination: {
