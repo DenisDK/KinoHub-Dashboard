@@ -30,6 +30,7 @@ const columns = [
             fill
             sizes="50px"
             style={{ borderRadius: "50%" }}
+            unoptimized={false} // {false} | {true}
           />
         </div>
       );
@@ -44,13 +45,15 @@ const columns = [
     field: "isPremium",
     headerName: "Преміум",
     width: 100,
-    renderCell: (params) => <span>{params.value ? "Yes" : "No"}</span>,
+    renderCell: (params) => (
+      <span>{params.value ? "Преміум" : "Звичайний"}</span>
+    ),
   },
   {
     field: "isAdmin",
     headerName: "Адмін",
     width: 100,
-    renderCell: (params) => <span>{params.value ? "Yes" : "No"}</span>,
+    renderCell: (params) => <span>{params.value ? "Адмін" : "Звичайний"}</span>,
   },
   {
     field: "togglePremium",
@@ -120,7 +123,7 @@ const columns = [
 const DataTable = () => {
   const { theme } = useTheme();
   const [rows, setRows] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
@@ -131,10 +134,9 @@ const DataTable = () => {
       setRows(usersList);
     });
 
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
-  // Filter rows based on search query
   const filteredRows = rows.filter((row) =>
     row.nickname.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -173,7 +175,7 @@ const DataTable = () => {
             color: theme === "dark" ? "#4f4f4f" : "#a1a1a1",
           },
         })}
-        rows={filteredRows} // Use filtered rows instead of all rows
+        rows={filteredRows}
         columns={columns}
         initialState={{
           pagination: {
@@ -181,12 +183,12 @@ const DataTable = () => {
           },
         }}
         pageSizeOptions={[5, 10]}
-        //   checkboxSelection
+        checkboxSelection
         components={{
-          Toolbar: CustomToolbar, // Add custom toolbar
+          Toolbar: CustomToolbar,
         }}
         componentsProps={{
-          toolbar: { searchQuery, setSearchQuery }, // Pass search query state to the toolbar
+          toolbar: { searchQuery, setSearchQuery },
         }}
       />
     </div>
