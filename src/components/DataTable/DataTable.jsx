@@ -181,7 +181,7 @@ const DataTable = () => {
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
+        //   checkboxSelection
         components={{
           Toolbar: CustomToolbar, // Add custom toolbar
         }}
