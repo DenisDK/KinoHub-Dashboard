@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import { db } from "@/lib/firebase";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import CustomToolbar from "./CustomToolbar";
 
 const columns = [
   {
@@ -54,7 +54,7 @@ const columns = [
   },
   {
     field: "togglePremium",
-    headerName: "Преміус стату",
+    headerName: "Преміум статус",
     width: 150,
     renderCell: (params) => {
       const handleTogglePremium = async () => {
@@ -100,7 +100,7 @@ const columns = [
   },
   {
     field: "deleteUser",
-    headerName: "Видалити кристувача",
+    headerName: "Видалити користувача",
     width: 155,
     renderCell: (params) => {
       const handleDeleteUser = async () => {
@@ -141,15 +141,6 @@ const DataTable = () => {
 
   return (
     <div className="w-full h-auto bg-[#cccccc] dark:bg-[#272727] mt-5 duration-300 rounded-lg p-5">
-      {/* Search input */}
-      {/* <TextField
-        label="Пошук за ніком"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      /> */}
       <DataGrid
         sx={() => ({
           border: 1,
@@ -191,6 +182,12 @@ const DataTable = () => {
         }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
+        components={{
+          Toolbar: CustomToolbar, // Add custom toolbar
+        }}
+        componentsProps={{
+          toolbar: { searchQuery, setSearchQuery }, // Pass search query state to the toolbar
+        }}
       />
     </div>
   );
