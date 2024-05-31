@@ -32,11 +32,6 @@ const menuItems = [
         icon: <MdDashboard />,
       },
       {
-        title: "Додаток",
-        path: "/application",
-        icon: <MdShoppingBag />,
-      },
-      {
         title: "Преміум",
         path: "/premium",
         icon: <MdAttachMoney />,
@@ -124,7 +119,7 @@ const SideBar = () => {
   return (
     <div className="sticky top-10 flex flex-col max-w-[220px] h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-5">
-        <div className="relative" style={{ width: '45px', height: '45px' }}>
+        <div className="relative" style={{ width: "45px", height: "45px" }}>
           <Image
             className="rounded-full object-cover inline-block"
             src={userData?.profile_image || "/noavatar.png"}

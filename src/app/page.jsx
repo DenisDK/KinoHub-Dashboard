@@ -107,22 +107,22 @@ export default function Home() {
           <Card
             title={"Усього"}
             count={totalMovies.toString()}
-            icon={<MdSupervisedUserCircle size={24} />}
+            icon={<MdSupervisedUserCircle color="#1191F2" size={24} />}
           />
           <Card
             title={"Перегллянуті"}
             count={watchedMovies.toString()}
-            icon={<IoEyeSharp size={24} />}
+            icon={<IoEyeSharp color="#23ad56" size={24} />}
           />
           <Card
             title={"Заплановані"}
             count={plannedMovies.toString()}
-            icon={<CiBookmarkPlus size={24} />}
+            icon={<CiBookmarkPlus color="#eba234" size={24} />}
           />
           <Card
             title={"Покинуті"}
             count={abandonedMovies.toString()}
-            icon={<IoMdCloseCircle size={24} />}
+            icon={<IoMdCloseCircle color="#eb4034" size={24} />}
           />
         </div>
         {userData?.isAdmin && <DataTable />}
