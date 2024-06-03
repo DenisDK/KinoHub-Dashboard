@@ -119,23 +119,28 @@ const SideBar = () => {
   return (
     <div className="sticky top-10 flex flex-col max-w-[220px] h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-5">
-        <div className="relative" style={{ width: "45px", height: "45px" }}>
+        <div  >
           <Image
-            className="rounded-full object-cover inline-block"
+            className="rounded-full object-cover inline-block min-h-[45px] min-w-[45px] max-h-[45px] max-w-[45px]"
             src={userData?.profile_image || "/noavatar.png"}
             alt="User logo"
-            fill
+            width={45}
+            height={45}
           />
         </div>
         <div className="flex flex-col">
-          <span className="font-medium flex items-center gap-2">
-            {userData?.nickname || "User name"}
-            {userData?.isPremium && (
-              <span className="text-[#ff5200]">
-                <MdWorkspacePremium size={20} />
-              </span>
-            )}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-medium flex items-center gap-2 max-w-[150px] truncate">
+              {userData?.nickname || "User name"}
+            </span>
+            <span>
+              {userData?.isPremium && (
+                <span className="text-[#ff5200]">
+                  <MdWorkspacePremium size={20} />
+                </span>
+              )}
+            </span>
+          </div>
           <span className="text-xs dark:text-gray-300">
             {userData?.isAdmin ? (
               <span className="font-bold text-green-700 dark:text-green-500">

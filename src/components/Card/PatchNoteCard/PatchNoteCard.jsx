@@ -1,5 +1,8 @@
 import React from "react";
 
+// Icons
+import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
+
 const PatchNoteCard = ({
   patchCount,
   patchName,
@@ -10,7 +13,10 @@ const PatchNoteCard = ({
     <div className="">
       <div className="flex items-center justify-between">
         <div className="">
-          <h1 className="text-2xl font-bold">Патч {patchCount}</h1>
+          <div className="flex items-center gap-2">
+            <HiOutlineWrenchScrewdriver size={24} color="#EBA234"/>
+            <h1 className="text-2xl font-bold">Патч {patchCount}</h1>
+          </div>
           <p className="text-sm text-gray-500">{patchName}</p>
         </div>
         <p className="text-sm text-gray-500">{patchDate}</p>

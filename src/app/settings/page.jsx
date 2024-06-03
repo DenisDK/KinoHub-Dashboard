@@ -158,7 +158,7 @@ const SettingsPage = () => {
             icon={<MdSupervisedUserCircle color="#1191F2" size={24} />}
           />
           <Card
-            title={"Перегллянуті"}
+            title={"Переглянуті"}
             count={watchedMovies.toString()}
             icon={<IoEyeSharp color="#23ad56" size={24} />}
           />
@@ -223,11 +223,11 @@ const SettingsPage = () => {
           </form>
         </div>
         <div className="bg-[#ccc] dark:bg-[#272727] mt-5 p-5 rounded-lg">
-          <div className="font-bold">Звенрніть увагу!</div>
+          <div className="font-bold">Зверніть увагу!</div>
           <p className="">
             Завантаження GIF-зображень доступне лише при наявності
             преміум-статусу! З усіма перевагами ПРЕМІУМ СТАТУСУ можна
-            ознаемитись
+            ознайомитись
             <Link href="/help" className="underline ml-1 font-bold">
               тут!
             </Link>
