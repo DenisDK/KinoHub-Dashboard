@@ -69,6 +69,7 @@ const columns = [
 
       return (
         <Button
+          className="w-full"
           variant="contained"
           color="primary"
           onClick={handleTogglePremium}
@@ -92,6 +93,7 @@ const columns = [
 
       return (
         <Button
+          className="w-full"
           variant="contained"
           color="secondary"
           onClick={handleToggleAdmin}
@@ -104,7 +106,7 @@ const columns = [
   {
     field: "deleteUser",
     headerName: "Видалити користувача",
-    width: 155,
+    width: 165,
     renderCell: (params) => {
       const handleDeleteUser = async () => {
         const userRef = doc(db, "Users", params.row.id);
@@ -112,7 +114,12 @@ const columns = [
       };
 
       return (
-        <Button variant="contained" color="error" onClick={handleDeleteUser}>
+        <Button
+          className="w-full"
+          variant="contained"
+          color="error"
+          onClick={handleDeleteUser}
+        >
           Видалити
         </Button>
       );
@@ -183,7 +190,7 @@ const DataTable = () => {
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
+        //   checkboxSelection
         components={{
           Toolbar: CustomToolbar,
         }}
