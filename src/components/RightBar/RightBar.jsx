@@ -71,11 +71,7 @@ const RightBar = () => {
           </span>
           <p className="text-sm mb-2">Супер додаток для кінолюбів😎👍!</p>
           <button className="bg-[#ccc] dark:bg-[#272727] hover:bg-[#bbb] dark:hover:bg-[#353535] duration-300 py-2 px-4 rounded-md ">
-            <a
-              href="\public\astronaut.png"
-              className="flex items-center"
-              download
-            >
+            <a href="KinoHub.apk" className="flex items-center" download>
               <FaCloudDownloadAlt />
               <span className="ml-2">Завантажити</span>
             </a>
