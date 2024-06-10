@@ -12,125 +12,18 @@ import Image from "next/image";
 import { db } from "@/lib/firebase";
 import Button from "@mui/material/Button";
 import CustomToolbar from "./CustomToolbar";
-
-const columns = [
-  {
-    field: "profile_image",
-    headerName: "Аватар",
-    width: 65,
-    renderCell: (params) => {
-      if (!params.value) {
-        return <span>No Avatar</span>;
-      }
-      return (
-        <div style={{ width: 45, height: 45, position: "relative" }}>
-          <Image
-            src={params.value}
-            alt="avatar"
-            fill
-            sizes="50px"
-            style={{ borderRadius: "50%" }}
-            unoptimized={false} // {false} | {true}
-          />
-        </div>
-      );
-    },
-  },
-  {
-    field: "nickname",
-    headerName: "Нік",
-    width: 130,
-  },
-  {
-    field: "isPremium",
-    headerName: "Преміум",
-    width: 100,
-    renderCell: (params) => (
-      <span>{params.value ? "Преміум" : "Звичайний"}</span>
-    ),
-  },
-  {
-    field: "isAdmin",
-    headerName: "Адмін",
-    width: 100,
-    renderCell: (params) => <span>{params.value ? "Адмін" : "Звичайний"}</span>,
-  },
-  {
-    field: "togglePremium",
-    headerName: "Преміум статус",
-    width: 150,
-    renderCell: (params) => {
-      const handleTogglePremium = async () => {
-        const userRef = doc(db, "Users", params.row.id);
-        await updateDoc(userRef, {
-          isPremium: !params.row.isPremium,
-        });
-      };
-
-      return (
-        <Button
-          className="w-full"
-          variant="contained"
-          color="primary"
-          onClick={handleTogglePremium}
-        >
-          {params.row.isPremium ? "Забрати" : "Видати"}
-        </Button>
-      );
-    },
-  },
-  {
-    field: "toggleAdmin",
-    headerName: "Адмін статус",
-    width: 150,
-    renderCell: (params) => {
-      const handleToggleAdmin = async () => {
-        const userRef = doc(db, "Users", params.row.id);
-        await updateDoc(userRef, {
-          isAdmin: !params.row.isAdmin,
-        });
-      };
-
-      return (
-        <Button
-          className="w-full"
-          variant="contained"
-          color="secondary"
-          onClick={handleToggleAdmin}
-        >
-          {params.row.isAdmin ? "Забрати" : "Видати"}
-        </Button>
-      );
-    },
-  },
-  {
-    field: "deleteUser",
-    headerName: "Видалити користувача",
-    width: 165,
-    renderCell: (params) => {
-      const handleDeleteUser = async () => {
-        const userRef = doc(db, "Users", params.row.id);
-        await deleteDoc(userRef);
-      };
-
-      return (
-        <Button
-          className="w-full"
-          variant="contained"
-          color="error"
-          onClick={handleDeleteUser}
-        >
-          Видалити
-        </Button>
-      );
-    },
-  },
-];
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const DataTable = () => {
   const { theme } = useTheme();
   const [rows, setRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
@@ -144,9 +37,136 @@ const DataTable = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleOpenDialog = (user) => {
+    setUserToDelete(user);
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+    setUserToDelete(null);
+  };
+
+  const handleDeleteUser = async () => {
+    if (userToDelete) {
+      const userRef = doc(db, "Users", userToDelete.id);
+      await deleteDoc(userRef);
+      handleCloseDialog();
+    }
+  };
+
   const filteredRows = rows.filter((row) =>
     row.nickname.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const columns = [
+    {
+      field: "profile_image",
+      headerName: "Аватар",
+      width: 65,
+      renderCell: (params) => {
+        if (!params.value) {
+          return <span>No Avatar</span>;
+        }
+        return (
+          <div style={{ width: 45, height: 45, position: "relative" }}>
+            <Image
+              src={params.value}
+              alt="avatar"
+              fill
+              sizes="50px"
+              style={{ borderRadius: "50%" }}
+              unoptimized={false} // {false} | {true}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      field: "nickname",
+      headerName: "Нік",
+      width: 130,
+    },
+    {
+      field: "isPremium",
+      headerName: "Преміум",
+      width: 100,
+      renderCell: (params) => (
+        <span>{params.value ? "Преміум" : "Звичайний"}</span>
+      ),
+    },
+    {
+      field: "isAdmin",
+      headerName: "Адмін",
+      width: 100,
+      renderCell: (params) => (
+        <span>{params.value ? "Адмін" : "Звичайний"}</span>
+      ),
+    },
+    {
+      field: "togglePremium",
+      headerName: "Преміум статус",
+      width: 150,
+      renderCell: (params) => {
+        const handleTogglePremium = async () => {
+          const userRef = doc(db, "Users", params.row.id);
+          await updateDoc(userRef, {
+            isPremium: !params.row.isPremium,
+          });
+        };
+
+        return (
+          <Button
+            className="w-full"
+            variant="contained"
+            color="primary"
+            onClick={handleTogglePremium}
+          >
+            {params.row.isPremium ? "Забрати" : "Видати"}
+          </Button>
+        );
+      },
+    },
+    {
+      field: "toggleAdmin",
+      headerName: "Адмін статус",
+      width: 150,
+      renderCell: (params) => {
+        const handleToggleAdmin = async () => {
+          const userRef = doc(db, "Users", params.row.id);
+          await updateDoc(userRef, {
+            isAdmin: !params.row.isAdmin,
+          });
+        };
+
+        return (
+          <Button
+            className="w-full"
+            variant="contained"
+            color="secondary"
+            onClick={handleToggleAdmin}
+          >
+            {params.row.isAdmin ? "Забрати" : "Видати"}
+          </Button>
+        );
+      },
+    },
+    {
+      field: "deleteUser",
+      headerName: "Видалити користувача",
+      width: 165,
+      renderCell: (params) => (
+        <Button
+          className="w-full"
+          variant="contained"
+          color="error"
+          onClick={() => handleOpenDialog(params.row)}
+        >
+          Видалити
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <div className="w-full h-auto bg-[#cccccc] dark:bg-[#272727] mt-5 duration-300 rounded-lg p-5">
@@ -198,6 +218,43 @@ const DataTable = () => {
           toolbar: { searchQuery, setSearchQuery },
         }}
       />
+      <Dialog
+        open={open}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="bg-[#ccc] dark:bg-[#272727] text-[#353535] dark:text-[#fff]"
+        >
+          {"Підтвердження видалення"}
+        </DialogTitle>
+        <DialogContent className="bg-[#ccc] dark:bg-[#272727]">
+          <DialogContentText
+            id="alert-dialog-description"
+            className="text-[#4b4b4b] dark:text-[#d6d6d6]"
+          >
+            Ви впевнені, що хочете видалити користувача {userToDelete?.nickname}
+            ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="bg-[#ccc] dark:bg-[#272727]">
+          <Button
+            onClick={handleCloseDialog}
+            className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
+          >
+            Скасувати
+          </Button>
+          <Button
+            onClick={handleDeleteUser}
+            className="text-[#ff0000] font-bold hover:bg-[#c9b3b3] dark:hover:bg-[#3d3535]"
+            autoFocus
+          >
+            Видалити
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
