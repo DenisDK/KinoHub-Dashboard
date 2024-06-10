@@ -7,6 +7,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  writeBatch,
+  getDocs,
 } from "firebase/firestore";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
@@ -37,27 +39,80 @@ const DataTable = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleOpenDialog = (user) => {
-    setUserToDelete(user);
-    setOpen(true);
-  };
+  //   const handleOpenDialog = (user) => {
+  //     setUserToDelete(user);
+  //     setOpen(true);
+  //   };
 
   const handleCloseDialog = () => {
     setOpen(false);
     setUserToDelete(null);
   };
 
-  const handleDeleteUser = async () => {
-    if (userToDelete) {
-      const userRef = doc(db, "Users", userToDelete.id);
-      await deleteDoc(userRef);
-      handleCloseDialog();
-    }
-  };
+  // const handleDeleteUser = async () => {
+  //    if (userToDelete) {
+  //      const userRef = doc(db, "Users", userToDelete.id);
+  //      await deleteDoc(userRef);
+  //      handleCloseDialog();
+  //    }
+  //  };
 
   const filteredRows = rows.filter((row) =>
     row.nickname.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDeleteUser = async (userId) => {
+    const batch = writeBatch(db);
+
+    // Видалення документа користувача
+    const userRef = doc(db, "Users", userId);
+    deleteDoc(userRef);
+
+    // Видалення всіх лайків/дизлайків користувача
+    const ratingsSnapshot = await getDocs(collection(db, "Rating"));
+    ratingsSnapshot.forEach((ratingDoc) => {
+      const ratingData = ratingDoc.data();
+      const updatedLikes = ratingData.likes.filter((id) => id !== userId);
+      const updatedDislikes = ratingData.dislikes.filter((id) => id !== userId);
+
+      batch.update(ratingDoc.ref, {
+        likes: updatedLikes,
+        dislikes: updatedDislikes,
+      });
+    });
+
+    // Видалення всіх коментарів користувача
+    const rootCollection = collection(db, "Comments");
+    const querySnapshot = await getDocs(rootCollection);
+    console.log(`aaaaaaaaaaaa`);
+
+    for (const doc of querySnapshot.docs) {
+      console.log(`перевірка ${doc.id} фільма`);
+      console.log(`bbbbbbbbbbbbbb`);
+
+      const subCollectionRef = collection(doc.ref, "comment");
+      const subQuerySnapshot = await getDocs(subCollectionRef);
+
+      subQuerySnapshot.forEach((subDoc) => {
+        console.log(`перевірка ${subDoc.id} фільма`);
+        console.log(`cccccccccccccccc`);
+
+        const data = subDoc.data();
+        if (data.userID === userId) {
+          batch.delete(subDoc.ref);
+        }
+      });
+    }
+    // Commit all batch operations
+    try {
+      await batch.commit();
+      console.log(
+        `All comments by user ${userId} have been successfully deleted.`
+      );
+    } catch (error) {
+      console.error("Error committing batch:", error);
+    }
+  };
 
   const columns = [
     {
@@ -160,7 +215,7 @@ const DataTable = () => {
           className="w-full"
           variant="contained"
           color="error"
-          onClick={() => handleOpenDialog(params.row)}
+          onClick={() => handleDeleteUser(params.row.id)}
         >
           Видалити
         </Button>
@@ -235,8 +290,8 @@ const DataTable = () => {
             id="alert-dialog-description"
             className="text-[#4b4b4b] dark:text-[#d6d6d6]"
           >
-            Ви впевнені, що хочете видалити користувача{" "}
-            <span className="font-bold text-xl text-[#353535] dark:text-[#fff]">
+            Ви впевнені, що хочете видалити користувача
+            <span className="ml-1 font-bold text-xl text-[#353535] dark:text-[#fff]">
               {userToDelete?.nickname}
             </span>
             ?
