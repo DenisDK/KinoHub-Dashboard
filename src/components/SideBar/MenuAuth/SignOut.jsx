@@ -60,13 +60,13 @@ const SignOut = () => {
             className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
             onClick={handleCloseDialog}
           >
-            ПИСЮН
+            Скасувати
           </Button>
           <Button
             className="text-[#ff0000] font-bold hover:bg-[#c9b3b3] dark:hover:bg-[#3d3535]"
             onClick={handleLogout}
           >
-            ПИСЬКА
+            Вийти
           </Button>
         </DialogActions>
       </Dialog>
