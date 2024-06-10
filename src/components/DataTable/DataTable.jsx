@@ -235,7 +235,10 @@ const DataTable = () => {
             id="alert-dialog-description"
             className="text-[#4b4b4b] dark:text-[#d6d6d6]"
           >
-            Ви впевнені, що хочете видалити користувача {userToDelete?.nickname}
+            Ви впевнені, що хочете видалити користувача{" "}
+            <span className="font-bold text-xl text-[#353535] dark:text-[#fff]">
+              {userToDelete?.nickname}
+            </span>
             ?
           </DialogContentText>
         </DialogContent>
