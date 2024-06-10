@@ -52,33 +52,37 @@ const DataTable = () => {
   const handleDeleteUser = async () => {
     if (!userToDelete) return;
 
-  const userId = userToDelete.id;
-  const batch = writeBatch(db);
+    const userId = userToDelete.id;
+    const batch = writeBatch(db);
 
-  // Видалення записів з колекцій 'WatchedMovies', 'PlannedMovies', 'AbandonedMovies'
-  const collectionsToDelete = ['WatchedMovies', 'PlannedMovies', 'AbandonedMovies'];
-  collectionsToDelete.forEach(async (collectionName) => {
-    const collectionRef = collection(db, "Users", userId, collectionName);
-    const snapshot = await getDocs(collectionRef);
-    snapshot.forEach((doc) => {
-      batch.delete(doc.ref);
+    // Видалення записів з колекцій 'WatchedMovies', 'PlannedMovies', 'AbandonedMovies'
+    const collectionsToDelete = [
+      "WatchedMovies",
+      "PlannedMovies",
+      "AbandonedMovies",
+    ];
+    collectionsToDelete.forEach(async (collectionName) => {
+      const collectionRef = collection(db, "Users", userId, collectionName);
+      const snapshot = await getDocs(collectionRef);
+      snapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
     });
-  });
 
-  // Оновлення списку друзів для кожного користувача
-  const usersSnapshot = await getDocs(collection(db, "Users"));
-  usersSnapshot.forEach((userDoc) => {
-    const userData = userDoc.data();
-    if (userData.friends.includes(userId)) {
-      const updatedFriends = userData.friends.filter(id => id !== userId);
-      const userDocRef = doc(db, "Users", userDoc.id);
-      batch.update(userDocRef, { friends: updatedFriends });
-    }
-  });
+    // Оновлення списку друзів для кожного користувача
+    const usersSnapshot = await getDocs(collection(db, "Users"));
+    usersSnapshot.forEach((userDoc) => {
+      const userData = userDoc.data();
+      if (userData.friends.includes(userId)) {
+        const updatedFriends = userData.friends.filter((id) => id !== userId);
+        const userDocRef = doc(db, "Users", userDoc.id);
+        batch.update(userDocRef, { friends: updatedFriends });
+      }
+    });
 
-  // Видалення користувача
-  const userRef = doc(db, "Users", userId);
-  batch.delete(userRef);
+    // Видалення користувача
+    const userRef = doc(db, "Users", userId);
+    batch.delete(userRef);
 
     // Видалення оцінок
     const ratingsSnapshot = await getDocs(collection(db, "Rating"));
