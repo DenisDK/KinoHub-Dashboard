@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { sendEmail } from "./MailService";
@@ -11,15 +11,17 @@ const ContactForm = () => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
-  const send = async() => {
-    await sendEmail(email, subject, message)
-  }
-    
+  const send = async () => {
+    await sendEmail(email, subject, message);
+  };
+
   return (
     <div className="bg-[#ccc] dark:bg-[#272727] p-5 rounded-lg w-[555px]">
       <form className="space-y-4">
         <div>
-          <label className="block mb-3 text-sm font-medium">Електронна адреса:</label>
+          <label className="block mb-3 text-sm font-medium">
+            Електронна адреса:
+          </label>
           <input
             type="email"
             value={email}
@@ -27,7 +29,7 @@ const ContactForm = () => {
               const value = e.target.value;
               setEmail(value);
             }}
-            className="w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 duration-100 focus:ring-blue-600 focus:ring-inset"
+            className="w-full px-3 py-2 border border-transparent bg-[#414141] rounded-md focus:outline-none focus:ring-2 duration-100 focus:ring-blue-600 focus:ring-inset"
           />
         </div>
         <div>
@@ -39,18 +41,20 @@ const ContactForm = () => {
               const value = e.target.value;
               setSubject(value);
             }}
-            className="w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 duration-100 focus:border-blue-600"
+            className="w-full px-3 py-2 border border-transparent bg-[#414141] rounded-md focus:outline-none focus:ring-2 duration-100 focus:border-blue-600"
           />
         </div>
         <div>
-          <label className="block mb-3 text-sm font-medium">Зміст проблеми:</label>
+          <label className="block mb-3 text-sm font-medium">
+            Зміст проблеми:
+          </label>
           <textarea
             value={message}
             onChange={(e) => {
               const value = e.target.value;
               setMessage(value);
             }}
-            className="w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 duration-100 focus:border-blue-600 resize-none"
+            className="w-full px-3 py-2 border border-transparent bg-[#414141] rounded-md focus:outline-none focus:ring-2 duration-100 focus:border-blue-600 resize-none"
             rows="5"
           ></textarea>
         </div>
