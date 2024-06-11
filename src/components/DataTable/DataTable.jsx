@@ -24,8 +24,11 @@ const DataTable = () => {
   const { theme } = useTheme();
   const [rows, setRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [open, setOpen] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openPremiumDialog, setOpenPremiumDialog] = useState(false);
+  const [openAdminDialog, setOpenAdminDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [userToUpdate, setUserToUpdate] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
@@ -39,17 +42,17 @@ const DataTable = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleOpenDialog = (user) => {
+  const handleOpenDeleteDialog = (user) => {
     if (user.isAdmin) {
       alert("Адмін користувачів не можна видаляти.");
       return;
     }
     setUserToDelete(user);
-    setOpen(true);
+    setOpenDeleteDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpen(false);
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
     setUserToDelete(null);
   };
 
@@ -123,10 +126,50 @@ const DataTable = () => {
       console.log(
         `All data related to user ${userId} has been successfully deleted.`
       );
-      handleCloseDialog();
+      handleCloseDeleteDialog();
     } catch (error) {
       console.error("Error committing batch:", error);
     }
+  };
+
+  const handleOpenPremiumDialog = (user) => {
+    setUserToUpdate(user);
+    setOpenPremiumDialog(true);
+  };
+
+  const handleClosePremiumDialog = () => {
+    setOpenPremiumDialog(false);
+    setUserToUpdate(null);
+  };
+
+  const handleTogglePremium = async () => {
+    if (!userToUpdate) return;
+
+    const userRef = doc(db, "Users", userToUpdate.id);
+    await updateDoc(userRef, {
+      isPremium: !userToUpdate.isPremium,
+    });
+    handleClosePremiumDialog();
+  };
+
+  const handleOpenAdminDialog = (user) => {
+    setUserToUpdate(user);
+    setOpenAdminDialog(true);
+  };
+
+  const handleCloseAdminDialog = () => {
+    setOpenAdminDialog(false);
+    setUserToUpdate(null);
+  };
+
+  const handleToggleAdmin = async () => {
+    if (!userToUpdate) return;
+
+    const userRef = doc(db, "Users", userToUpdate.id);
+    await updateDoc(userRef, {
+      isAdmin: !userToUpdate.isAdmin,
+    });
+    handleCloseAdminDialog();
   };
 
   const filteredRows = rows.filter((row) =>
@@ -181,49 +224,31 @@ const DataTable = () => {
       field: "togglePremium",
       headerName: "Преміум статус",
       width: 150,
-      renderCell: (params) => {
-        const handleTogglePremium = async () => {
-          const userRef = doc(db, "Users", params.row.id);
-          await updateDoc(userRef, {
-            isPremium: !params.row.isPremium,
-          });
-        };
-
-        return (
-          <Button
-            className="w-full"
-            variant="contained"
-            color="primary"
-            onClick={handleTogglePremium}
-          >
-            {params.row.isPremium ? "Забрати" : "Видати"}
-          </Button>
-        );
-      },
+      renderCell: (params) => (
+        <Button
+          className="w-full"
+          variant="contained"
+          color="primary"
+          onClick={() => handleOpenPremiumDialog(params.row)}
+        >
+          {params.row.isPremium ? "Забрати" : "Видати"}
+        </Button>
+      ),
     },
     {
       field: "toggleAdmin",
       headerName: "Адмін статус",
       width: 150,
-      renderCell: (params) => {
-        const handleToggleAdmin = async () => {
-          const userRef = doc(db, "Users", params.row.id);
-          await updateDoc(userRef, {
-            isAdmin: !params.row.isAdmin,
-          });
-        };
-
-        return (
-          <Button
-            className="w-full"
-            variant="contained"
-            color="secondary"
-            onClick={handleToggleAdmin}
-          >
-            {params.row.isAdmin ? "Забрати" : "Видати"}
-          </Button>
-        );
-      },
+      renderCell: (params) => (
+        <Button
+          className="w-full"
+          variant="contained"
+          color="secondary"
+          onClick={() => handleOpenAdminDialog(params.row)}
+        >
+          {params.row.isAdmin ? "Забрати" : "Видати"}
+        </Button>
+      ),
     },
     {
       field: "deleteUser",
@@ -234,7 +259,7 @@ const DataTable = () => {
           className="w-full"
           variant="contained"
           color="error"
-          onClick={() => handleOpenDialog(params.row)}
+          onClick={() => handleOpenDeleteDialog(params.row)}
           disabled={params.row.isAdmin}
         >
           Видалити
@@ -293,9 +318,11 @@ const DataTable = () => {
           toolbar: { searchQuery, setSearchQuery },
         }}
       />
+
+      {/* Delete User Dialog */}
       <Dialog
-        open={open}
-        onClose={handleCloseDialog}
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -319,7 +346,7 @@ const DataTable = () => {
         </DialogContent>
         <DialogActions className="bg-[#ccc] dark:bg-[#272727]">
           <Button
-            onClick={handleCloseDialog}
+            onClick={handleCloseDeleteDialog}
             className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
           >
             Скасувати
@@ -330,6 +357,102 @@ const DataTable = () => {
             autoFocus
           >
             Видалити
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Toggle Premium Dialog */}
+      <Dialog
+        open={openPremiumDialog}
+        onClose={handleClosePremiumDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="bg-[#ccc] dark:bg-[#272727] text-[#353535] dark:text-[#fff]"
+        >
+          {userToUpdate?.isPremium
+            ? "Підтвердження зняття преміум статусу"
+            : "Підтвердження видачі преміум статусу"}
+        </DialogTitle>
+        <DialogContent className="bg-[#ccc] dark:bg-[#272727]">
+          <DialogContentText
+            id="alert-dialog-description"
+            className="text-[#4b4b4b] dark:text-[#d6d6d6]"
+          >
+            Ви впевнені, що хочете{" "}
+            {userToUpdate?.isPremium
+              ? "забрати преміум статус у"
+              : "видати преміум статус для"}
+            користувача
+            <span className="ml-1 font-bold text-xl text-[#353535] dark:text-[#fff]">
+              {userToUpdate?.nickname}
+            </span>
+            ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="bg-[#ccc] dark:bg-[#272727]">
+          <Button
+            onClick={handleClosePremiumDialog}
+            className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
+          >
+            Скасувати
+          </Button>
+          <Button
+            onClick={handleTogglePremium}
+            className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
+            autoFocus
+          >
+            {userToUpdate?.isPremium ? "Забрати" : "Видати"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Toggle Admin Dialog */}
+      <Dialog
+        open={openAdminDialog}
+        onClose={handleCloseAdminDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="bg-[#ccc] dark:bg-[#272727] text-[#353535] dark:text-[#fff]"
+        >
+          {userToUpdate?.isAdmin
+            ? "Підтвердження зняття адмін статусу"
+            : "Підтвердження видачі адмін статусу"}
+        </DialogTitle>
+        <DialogContent className="bg-[#ccc] dark:bg-[#272727]">
+          <DialogContentText
+            id="alert-dialog-description"
+            className="text-[#4b4b4b] dark:text-[#d6d6d6]"
+          >
+            Ви впевнені, що хочете{" "}
+            {userToUpdate?.isAdmin
+              ? "забрати адмін статус у"
+              : "видати адмін статус для"}
+            користувача
+            <span className="ml-1 font-bold text-xl text-[#353535] dark:text-[#fff]">
+              {userToUpdate?.nickname}
+            </span>
+            ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="bg-[#ccc] dark:bg-[#272727]">
+          <Button
+            onClick={handleCloseAdminDialog}
+            className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
+          >
+            Скасувати
+          </Button>
+          <Button
+            onClick={handleToggleAdmin}
+            className="text-[#007bff] font-bold hover:bg-[#b3c0c9] dark:hover:bg-[#32373a]"
+            autoFocus
+          >
+            {userToUpdate?.isAdmin ? "Забрати" : "Видати"}
           </Button>
         </DialogActions>
       </Dialog>
