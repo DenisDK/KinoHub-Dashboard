@@ -40,6 +40,10 @@ const DataTable = () => {
   }, []);
 
   const handleOpenDialog = (user) => {
+    if (user.isAdmin) {
+      alert("Адмін користувачів не можна видаляти.");
+      return;
+    }
     setUserToDelete(user);
     setOpen(true);
   };
@@ -50,7 +54,7 @@ const DataTable = () => {
   };
 
   const handleDeleteUser = async () => {
-    if (!userToDelete) return;
+    if (!userToDelete || userToDelete.isAdmin) return;
 
     const userId = userToDelete.id;
     const batch = writeBatch(db);
@@ -61,13 +65,13 @@ const DataTable = () => {
       "PlannedMovies",
       "AbandonedMovies",
     ];
-    collectionsToDelete.forEach(async (collectionName) => {
+    for (const collectionName of collectionsToDelete) {
       const collectionRef = collection(db, "Users", userId, collectionName);
       const snapshot = await getDocs(collectionRef);
       snapshot.forEach((doc) => {
         batch.delete(doc.ref);
       });
-    });
+    }
 
     // Оновлення списку друзів для кожного користувача
     const usersSnapshot = await getDocs(collection(db, "Users"));
@@ -231,6 +235,7 @@ const DataTable = () => {
           variant="contained"
           color="error"
           onClick={() => handleOpenDialog(params.row)}
+          disabled={params.row.isAdmin}
         >
           Видалити
         </Button>
