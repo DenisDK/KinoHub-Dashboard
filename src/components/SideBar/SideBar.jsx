@@ -21,6 +21,8 @@ import { MdOutlineSettings } from "react-icons/md";
 import { MdHelpCenter } from "react-icons/md";
 import { MdWorkspacePremium } from "react-icons/md";
 import { BsFillInfoCircleFill } from "react-icons/bs";
+import { RiMailSendLine } from "react-icons/ri";
+
 
 const menuItems = [
   {
@@ -55,6 +57,11 @@ const menuItems = [
         title: "Допомога",
         path: "/help",
         icon: <MdHelpCenter />,
+      },
+      {
+        title: "Написати нам",
+        path: "/contact",
+        icon: <RiMailSendLine />
       },
     ],
   },
