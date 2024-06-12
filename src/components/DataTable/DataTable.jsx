@@ -299,7 +299,7 @@ const DataTable = () => {
             color: theme === "dark" ? "#e0e0e0" : "#6e6e6e",
           },
           "& .Mui-disabled": {
-            color: theme === "dark" ? "#adadad" : "#5c5c5c",
+            color: theme === "dark" ? "#757575" : "#757575",
           },
         })}
         rows={filteredRows}
