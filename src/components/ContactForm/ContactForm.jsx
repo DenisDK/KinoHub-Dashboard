@@ -8,11 +8,12 @@ import { RiMailSendLine } from "react-icons/ri";
 
 const ContactForm = () => {
   const [email, setEmail] = useState("");
+  const [emailPass, setEmailPass] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
   const send = async () => {
-    await sendEmail(email, subject, message);
+    await sendEmail(email, emailPass, subject, message);
   };
 
   return (
@@ -30,6 +31,18 @@ const ContactForm = () => {
               setEmail(value);
             }}
             className="w-full px-3 py-2 border border-transparent bg-[#414141] rounded-md focus:outline-none focus:ring-2 duration-100 focus:ring-blue-600 focus:ring-inset"
+          />
+        </div>
+        <div>
+          <label className="block mb-3 text-sm font-medium">Пароль застосунку:</label>
+          <input
+            type="password"
+            value={emailPass}
+            onChange={(e) => {
+              const value = e.target.value;
+              setEmailPass(value);
+            }}
+            className="w-full px-3 py-2 border border-transparent bg-[#414141] rounded-md focus:outline-none focus:ring-2 duration-100 focus:border-blue-600"
           />
         </div>
         <div>

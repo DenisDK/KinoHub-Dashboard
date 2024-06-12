@@ -2,17 +2,17 @@ import nodemailer from "nodemailer";
 
 export async function sendMail({
    mail,
+   mailPass,
    subject,
    message,
    body,
 }) {
-   const { EMAIL, EMAIL_PASS } = process.env;
 
    const transport = nodemailer.createTransport ({
       service: 'gmail',
       auth: {
-         user: EMAIL,
-         pass: EMAIL_PASS,
+         user: mail,
+         pass: mailPass,
       },
    });
    try {
@@ -25,8 +25,8 @@ export async function sendMail({
    }
    try{
       const sendResult = await transport.sendMail({
-         from: EMAIL,
-         to: EMAIL,
+         from: mail,
+         to: 'artem.shaparenko1@nure.ua, oleksandr.stavytskyi@nure.ua, serhii.kryvoshapko@nure.ua, denys.kushniruk@nure.ua',
          subject: subject,
          text: message,
          html: body

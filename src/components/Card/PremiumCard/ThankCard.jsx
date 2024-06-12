@@ -12,7 +12,7 @@ const ThankCard = () => {
           <div className="absolute left-0 bottom-[-10px] h-1 w-full bg-[#ccc] dark:bg-[#5f5f5f]"></div>
         </div>
         <div className="mt-7">
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-5 flex items-center gap-3 justify-center">
             <IoMdCheckmark className="text-green-700 dark:text-green-500" /> Вам
             доступні всі функції
           </div>
@@ -21,7 +21,7 @@ const ThankCard = () => {
             className="mx-auto mt-5 text-[#ff5200]"
           />
           <div className="mt-5 flex items-center gap-3">
-            Дякуэмо що ви придбали Преміум!
+            Дякуємо що ви придбали Преміум!
           </div>
         </div>
       </div>
